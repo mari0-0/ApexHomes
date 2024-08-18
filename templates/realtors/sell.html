@@ -1,0 +1,91 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+
+{% block style %}
+  <style>
+    .btn-center{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 3% 0;
+    }
+
+  </style>
+{% endblock style %}
+  
+
+{% block title %} | About Us {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">About BT Real Estate</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active">Sell House</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section id="about" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h2>List Your House Hassle-Free</h2>
+          <p class="lead">Let us take the stress out of selling your house. we ensure a seamless and hassle-free experience for you. fill out the form below with the details of your property, and we'll handle the rest. </p>
+          <img src="{% static 'img/about.jpg' %}" alt="">
+          <p class="mt-4">Our user-friendly platform makes it easy to showcase your house to potential buyers without any complexities.
+          <br><br>            
+            Listing your home with us is straightforward. Provide us with essential details such as property type, size, location, your contact information, asking price, and a brief description of your property. Our aim is to make the selling process efficient and effective, allowing you to focus on what matters while we take care of the marketing and exposure.
+            <br><br>
+            Unlock the potential of your property by sharing its unique features and attributes. We understand the significance of your home and are committed to showcasing it in the best possible way. Trust us to handle the intricacies while you take a step closer to finding the right buyer for your beloved home.</p>
+            <br>
+          </div>
+        <div class="col-md-4">
+          {% if mvp_realtors %}
+            {% for realtor in mvp_realtors %}
+            <div class="card">
+                <img class="card-img-top" src="{{ realtor.photo.url }}" alt="Seller of the month">
+                <div class="card-body">
+                  <h5 class="card-title">Seller Of The Month</h5>
+                  <h6 class="text-secondary">{{ realtor.name }}</h6>
+                  <p class="card-text">{{ realtor.description }}
+                  </p>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="btn-center">
+      <button class="button-33 btn-sell" onclick="window.location.href='/sell-house-form'"  role="button" style="text-align: center;">Sell Your House<i class="fa-solid fa-house ml-1"></i></button>          
+      <button class="button-33 btn-sell" onclick="window.location.href='/rent-your-house-form'"  role="button" style="text-align: center; margin-left:6rem;">Rent Your House<i class="fa-solid fa-house ml-1"></i></button>          
+    </div>
+    
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="bg-dark text-white text-center">
+    <h2 class="display-4">We Work For You</h2>
+    <hr>
+    <a href="{% url 'listings' %}" class="btn btn-secondary text-white btn-lg">View Our Featured Listings</a>
+  </section>
+
+{% endblock %}

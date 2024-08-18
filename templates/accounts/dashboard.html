@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block title %} | User Dashboard {% endblock %}
+
+{% block style %}
+  <style>
+    .small-h{
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    #close {
+      overflow: hidden;
+      position: relative;
+      border: none;
+      padding: 0;
+      width: 2em; height: 2em;
+      border-radius: 50%;
+      background: transparent;
+      color: #3377c0;
+      font: inherit;
+      text-indent: 100%;
+      cursor: pointer;
+      
+      &:focus {
+        outline: solid 0 transparent;
+        box-shadow: 0 0 0 2px #8ed0f9
+      }
+      
+      &:hover {
+        background: rgba(29, 161, 142, .1)
+      }
+      
+      &:before, &:after {
+        position: absolute;
+        top: 15%; left: calc(50% - .0625em);
+        width: .125em; height: 70%;
+        border-radius: .125em;
+        transform: rotate(45deg);
+        background: currentcolor;
+        content: ''
+      }
+      
+      &:after { transform: rotate(-45deg); }
+    }
+    .rate {
+      float: right;
+      height: 46px;
+      padding: 0 10px;
+      padding-bottom: 1rem;
+    }
+    .rate:not(:checked) > input {
+      position:absolute;
+      top:-9999px;
+    }
+    .rate:not(:checked) > label {
+      float:right;
+      width:1em;
+      overflow:hidden;
+      white-space:nowrap;
+      cursor:pointer;
+      font-size:30px;
+      color:#ccc;
+    }
+    .rate:not(:checked) > label:before {
+      content: '★ ';
+    }
+    .rate > input:checked ~ label {
+      color: #ffc700;
+    }
+    .rate:not(:checked) > label:hover,
+    .rate:not(:checked) > label:hover ~ label {
+      color: #deb217;
+    }
+    .rate > input:checked + label:hover,
+    .rate > input:checked + label:hover ~ label,
+    .rate > input:checked ~ label:hover,
+    .rate > input:checked ~ label:hover ~ label,
+    .rate > label:hover ~ input:checked ~ label {
+      color: #c59b08;
+    }
+  </style>
+{% endblock style %}
+  
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">User Dashboard</h1>
+          <p class="lead">Manage your account here</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> Dashboard</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Alerts -->
+  {% include 'partials/_alerts.html' %}
+
+  <section id="dashboard" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2 class="" style="margin-bottom: 2rem;">Welcome {{ user.first_name | title}} {{ user.last_name | title }}</h2>
+          {% if rented %}
+          <p class="small-h">Here are the Hotels you have rented</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Hotel</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Check-In</th>
+                <th scope="col">Check-Out</th>
+                <th scope="col">Rating</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for hotel in rented %}
+                <tr>
+                  <td>{{ hotel.hotel.title }}</td>
+                  <td>{{ hotel.amount }}</td>
+                  <td>{% rmv_midnight hotel.check_in %}</td>
+                  <td>{% rmv_midnight hotel.check_out %}</td>
+                  
+                  {% if not hotel.isRated %}
+                  <td>
+                    <button style="background-color: #3377c0 !important; border-radius:0;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="setHotelId({{hotel.id}})">
+                      Review
+                    </button>
+                  </td>
+                  {% else %}
+                  <td>Review Submitted</td>
+                  {% endif %}
+                  <td></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="exampleModalLabel">Your Review On Hotel</h3>
+                  <button id='close' type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">close</button>
+                  <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <form action="{% url 'rate_hotel' %}" id="myForm">
+                  <div class="modal-body">
+                    {% csrf_token %}
+                    <input class="inp1" type="hidden" name="hotel_id">
+                    <div class="form-group">
+                      <label for="property_name" class="col-form-label">Rating:</label>
+                      <!-- <input type="text" name="rating" class="form-control" value="{{ listing.title }}" > -->
+                      <div class="rate">
+                        <input class="inp2" type="radio" id="star5" name="rate" value="5" />
+                        <label for="star5" title="text">5 stars</label>
+                        <input class="inp3" type="radio" id="star4" name="rate" value="4" />
+                        <label for="star4" title="text">4 stars</label>
+                        <input class="inp4" type="radio" id="star3" name="rate" value="3" />
+                        <label for="star3" title="text">3 stars</label>
+                        <input class="inp5" type="radio" id="star2" name="rate" value="2" />
+                        <label for="star2" title="text">2 stars</label>
+                        <input class="inp6" type="radio" id="star1" name="rate" value="1" />
+                        <label for="star1" title="text">1 star</label>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="name" class="col-form-label">Review:</label>
+                      <textarea name="review" class="form-control inp7" id="" cols="30" rows="10"></textarea>
+                    </div>
+                    <hr>
+                  </div>
+                  <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Post Review">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Hotel</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Check-In</th>
+                <th scope="col">Check-Out</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          <p class="small-h" align="center">There are no Hotels you have rented</p>
+        {% endif %}
+
+          
+          {% if contacts %}
+            <p class="small-h">Here are the property listings that you have inquired about</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Property</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for contact in contacts %}
+                  <tr>
+                    <td>{{ contact.listing }}</td>
+                    <td>
+                      <a class="btn btn-light" href="{% url 'listing' contact.listing_id %}">View Listing</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Property</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+            <p class="small-h" align="center">You have not made any inquiries</p>
+          {% endif %}
+
+          {% if self_contacts %}
+            <h5 class="small-h">People who contacted you</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">phone no</th>
+                  <th scope="col">message</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for contact in self_contacts %}
+                  <tr>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.phone }}</td>
+                    <td>{{ contact.message }}</td>
+                    <td>
+                      <a class="btn btn-light" href="{% url 'listing' contact.listing_id %}">House</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+
+          {% if houses %}
+          <h5 class="small-h">Here are your Houses for Sale</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Property</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for house in houses %}
+                  <tr>
+                    <td>{{ house.title | title}}</td>
+                    <td>
+                      <a class="btn btn-light" href="{% url 'listing' house.id %}">View Listing</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+
+          {% if rent_houses %}
+          <h5 class="small-h">Here are your Houses for Rent</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Property</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for house in rent_houses %}
+                  <tr>
+                    <td>{{ house.title | title}}</td>
+                    <td>
+                      <a class="btn btn-light" href="/listings/rent-houses/{{house.id}}">View Listing</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+
+          {% if hotels %}
+            <h5 class="small-h">Here are your Hotels for Rent</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Property</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for hotel in hotels %}
+                  <tr>
+                    <td>{{ hotel.title | title }}</td>
+                    <td>
+                      <a class="btn btn-light" href="/listings/Hotels/{{hotel.id}}">View Listing</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function setHotelId(id){
+      const form = document.getElementById('myForm');
+      const existingInput = form.querySelector('input[name="hotel_id_test"]');
+
+      if (existingInput) {
+          existingInput.remove(); // Remove existing input if found
+      }
+
+      // Create a new hidden input element
+      const newHiddenInput = document.createElement('input');
+      newHiddenInput.type = 'hidden';
+      newHiddenInput.name = 'hotel_id_test'; // Set the name for the new input
+      newHiddenInput.value = id; // Set the value for the new input
+
+      // Append the new input to the form
+      form.appendChild(newHiddenInput);
+    }
+  </script>
+  {% endblock %}

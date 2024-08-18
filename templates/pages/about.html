@@ -1,0 +1,104 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+
+{% block title %} | About Us {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">About Apex Homes</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> About</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section id="about" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h2>About Apex Homes</h2>
+          <p class="lead">We Search For The Perfect Home </p>
+          <img src="{% static 'img/about.jpg' %}" alt="">
+          <p class="mt-4">
+Welcome to Apex Homes, your premier destination for seamless real estate transactions. At Apex Homes, we understand that buying or selling a house is more than just a transaction; it's a significant milestone in your life. That's why we are committed to providing you with an unparalleled real estate experience that goes beyond the conventional.
+<br><br>
+Our Mission
+At Apex Homes, our mission is to redefine the real estate landscape by offering innovative solutions and personalized services. We strive to be the trusted partner you can rely on whether you are looking to find your dream home or sell your property with confidence.
+<br><br>
+<h2>Why Choose Apex Homes?</h2>
+<br>
+<h4>Expertise</h4>
+<br>
+Backed by a team of experienced real estate professionals, we bring a wealth of knowledge and expertise to the table. Our agents are dedicated to staying ahead of industry trends, ensuring that you receive the best advice and guidance throughout your real estate journey.
+<br><br>
+<h4>Personalized Service</h4>
+<br>
+We understand that every client is unique, and so are their real estate needs. That's why we take a personalized approach to every transaction. Whether you're a first-time homebuyer or a seasoned investor, we tailor our services to match your goals and aspirations.
+<br><br>
+<h4>Transparency</h4>
+<br>
+Transparency is the cornerstone of our business. We believe in open communication and providing you with all the information you need to make informed decisions. Our commitment to transparency builds trust and fosters lasting relationships with our clients.
+<br><br>
+<h4>Cutting-Edge Technology</h4>
+<br>
+In the fast-paced world of real estate, staying ahead requires embracing technology. Apex Homes leverages cutting-edge tools and platforms to streamline the buying and selling process, making it more efficient and convenient for you.
+<br><br>
+<h4>Our Promise</h4>
+<br>
+When you choose Apex Homes, you're not just getting a real estate service; you're gaining a partner dedicated to your success. Whether you're searching for your dream home or looking to sell, we are here to guide you every step of the way.
+<br><br>
+Thank you for considering Apex Homes for your real estate needs. We look forward to being a part of your journey and helping you achieve your real estate goals.
+          </p>
+        </div>
+        <div class="col-md-4">
+          {% if mvp_realtors %}
+            {% for realtor in mvp_realtors %}
+            <div class="card">
+              
+              {% if realtor.photo %}
+              <img class="card-img-top" src="{{ realtor.photo.url }}" alt="Seller of the month">
+                
+              {% else %}
+              <img class="card-img-top" src="" alt="Seller of the month">
+              {% endif %}
+                
+                <div class="card-body">
+                  <h5 class="card-title">Seller Of The Month</h5>
+                  <h6 class="text-secondary">{{ realtor.name }}</h6>
+                  <p class="card-text">{{ realtor.description }}
+                  </p>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="bg-dark text-white text-center">
+    <h2 class="display-4">We Work For You</h2>
+    <hr>
+    <a href="{% url 'listings' %}" class="btn btn-secondary text-white btn-lg">View Our Featured Listings</a>
+  </section>
+
+{% endblock %}

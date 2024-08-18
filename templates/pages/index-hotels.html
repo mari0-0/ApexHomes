@@ -1,0 +1,382 @@
+{% extends 'base-hotels.html' %} 
+
+{% load humanize %}
+
+
+
+
+{% block style %}
+  <style>
+    nav .bar{
+      position: absolute;
+      bottom: 0;
+      right: -10px;
+      width: 96px;
+      height: 3px;
+      background: #04364A;
+      border-radius: 8px;
+      transition: .5s;
+    }
+    
+    nav a:nth-child(1):hover~span{
+      right: 104px;
+    }
+    .nav-item .nav-link{
+      padding-left: 20px;
+    }
+
+    .card-body{
+      background-color: ghostwhite ;
+    }
+    .icons-div i{
+      margin-right: 1rem;
+    }
+  </style>
+{% endblock style %}
+  
+
+
+
+{% block title %} | Welcome {% endblock %}
+{% load static %}
+{% block content %}
+<!-- Showcase -->
+<section id="showcase" style="background-image: url({% static "img/building.jpg"%});">
+    <div class="container  text-center">
+      <div class="home-search  p-5" >
+        <div class="overlay box-main p-5" style="border-radius: 10px;">
+            <h1 class="display-4 mb-4 head-main">
+              Find the best Hotels
+            </h1>
+
+          <div class="wrapper">
+            <nav id="choice">
+                <a href="/" class="lnk lnk1 active">Houses</a>
+                <a href="javascript:void(0);" class="lnk lnk2">Hotels</a>
+              <span class="bar"></span>
+            </nav>
+          </div>
+          
+<!------------------------------------------------------------HOUSES----------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------HOUSES----------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------HOUSES----------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------HOUSES----------------------------------------------------------------------------------------------------------------------->
+          <div class="search">
+            <form action="{% url 'hotels-search' %}">
+              <!-- Form Row 1 -->
+              <div class="form-row">
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">Keywords</label>
+                  <input type="text" name="Hkeywords" class="form-control" placeholder="Keyword (Pool, Garage, etc)">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">City</label>
+                  <input type="text" name="Hcity" class="form-control" placeholder="City">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">State</label>
+                  <select name="Hstate" class="form-control">
+                    <option selected="true" disabled="disabled">State (All)</option>
+                    {% for key,value in state_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <!-- Form Row 2 -->
+              <div class="form-row">
+                
+                <div class="col-md-4 mb-3">
+                  <label class="sr-only">Rating</label>
+                  <select name="rating" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Rating (Any)</option>
+                    {% for key,value in rating_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <select name="min_price" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Min Price (Any)</option>
+                    {% for key,value in price_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <select name="max_price" class="form-control" id="type">
+                    <option selected="true" disabled="disabled">Max Price (Any)</option>
+                    {% for key,value in price_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-block mt-4" type="submit">Submit form</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<br>
+  <!-- Alerts -->
+  {% include 'partials/_alerts.html' %}
+
+  
+
+  {% if nearby_hotels %}
+  
+  <section id="listings" class="py-5">
+    <div class="container">
+      <h3 class="text-center mb-3">Hotels nearby</h3>
+      <div class="row">
+        {% if nearby_hotels %}
+          {% for listing in nearby_hotels %}
+            <!-- Listing 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                <img class="card-img-top" src="{{ listing.photo_main.url }}" alt="">
+                <div class="card-img-overlay">
+                  <h2 style="display: inline;">
+                    <!-- <span class="badge badge-secondary text-white" id="_price">₹{{ listing.price | intcomma }}</span> -->
+                    <span class="badge badge-secondary text-white"><span style="margin-right: 0.2rem;">₹</span><span id="_price">{{ listing.price}}</span></span>
+                  </h2>
+                  
+                  {% if listing.rating == 0 %}
+                  <h2 style="display: inline; float: right;"><span class="badge badge-secondary text-white"><span>- -<i class="fa-solid fa-star fa-2xs" style="margin-left: 0.37rem;"></i></span></h2>                    
+                  {% else %}
+                  <h2 style="display: inline; float: right;"><span class="badge badge-secondary text-white"><span>{{ listing.rating}}<i class="fa-solid fa-star fa-2xs" style="margin-left: 0.37rem;"></i></span></h2>
+                  {% endif %}
+                    
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ listing.title }}</h4>
+                    <p>
+                      <i class="fa-solid fa-location-dot text-secondary"></i> {{ listing.city | title }} {{ listing.state }}, {{ listing.zipcode }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-th-large"></i> Sqft: {{ listing.room_size }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-bed"></i> Beds: {{ listing.no_of_beds }}</div>
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-bed"></i> Bed Type: {{ listing.bed_type }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-bath"></i> Bathrooms: {{ listing.num_bathrooms }}</div>
+                  </div>
+                  <hr>
+                  <div class="py-2 icons-div text-secondary" style="line-height: 2.5rem;">                      
+                      {% if listing.has_air_conditioned %}
+                      <i class="fa-regular fa-snowflake fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_wifi %}
+                      <i class="fa-solid fa-wifi fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_pool %}
+                      <i class="fa-solid fa-water-ladder fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_gym %}
+                      <i class="fa-solid fa-dumbbell fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_spa %}
+                      <i class="fa-solid fa-spa fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_restaurant %}
+                      <i class="fa-solid fa-utensils fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_parking %}
+                      <i class="fa-solid fa-square-parking fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_tv %}
+                      <i class="fa-solid fa-tv fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_pet_friendly %}
+                      <i class="fa-solid fa-paw fa-lg"></i>
+                      {% endif %}
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      <i class="fas fa-clock"></i> {{ listing.list_date | timesince }}</div>
+                  </div>
+                  <hr>
+                  <a href="{% url 'HotelListing' listing.id %}" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>No Listings Available</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </section>
+
+  {% endif %}
+  <!-- Listings -->
+  <section id="listings" class="py-5">
+    <div class="container">
+      <h3 class="text-center mb-3">Latest Listed Hotels</h3>
+      <div class="row">
+        {% if hotels %}
+          {% for listing in hotels %}
+            <!-- Listing 1 -->
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card listing-preview">
+                <img class="card-img-top" src="{{ listing.photo_main.url }}" alt="">
+                <div class="card-img-overlay">
+                  <h2 style="display: inline;">
+                    <!-- <span class="badge badge-secondary text-white" id="_price">₹{{ listing.price | intcomma }}</span> -->
+                    <span class="badge badge-secondary text-white"><span style="margin-right: 0.2rem;">₹</span><span id="_price">{{ listing.price}}</span></span>
+                  </h2>
+                  
+                  {% if listing.rating == 0 %}
+                  <h2 style="display: inline; float: right;"><span class="badge badge-secondary text-white"><span>- -<i class="fa-solid fa-star fa-2xs" style="margin-left: 0.37rem;"></i></span></h2>                    
+                  {% else %}
+                  <h2 style="display: inline; float: right;"><span class="badge badge-secondary text-white"><span>{{ listing.rating}}<i class="fa-solid fa-star fa-2xs" style="margin-left: 0.37rem;"></i></span></h2>
+                  {% endif %}
+                    
+                </div>
+                <div class="card-body">
+                  <div class="listing-heading text-center">
+                    <h4 class="text-primary">{{ listing.title }}</h4>
+                    <p>
+                      <i class="fa-solid fa-location-dot text-secondary"></i> {{ listing.city | title }} {{ listing.state }}, {{ listing.zipcode }}</p>
+                  </div>
+                  <hr>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-th-large"></i> Sqft: {{ listing.room_size }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-bed"></i> Beds: {{ listing.no_of_beds }}</div>
+                  </div>
+                  <div class="row py-2 text-secondary">
+                    <div class="col-6">
+                      <i class="fas fa-bed"></i> Bed Type: {{ listing.bed_type }}</div>
+                    <div class="col-6">
+                      <i class="fas fa-bath"></i> Bathrooms: {{ listing.num_bathrooms }}</div>
+                  </div>
+                  <hr>
+                  <div class="py-2 icons-div text-secondary" style="line-height: 2.5rem;">                      
+                      {% if listing.has_air_conditioned %}
+                      <i class="fa-regular fa-snowflake fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_wifi %}
+                      <i class="fa-solid fa-wifi fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_pool %}
+                      <i class="fa-solid fa-water-ladder fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_gym %}
+                      <i class="fa-solid fa-dumbbell fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_spa %}
+                      <i class="fa-solid fa-spa fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_restaurant %}
+                      <i class="fa-solid fa-utensils fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_parking %}
+                      <i class="fa-solid fa-square-parking fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_tv %}
+                      <i class="fa-solid fa-tv fa-lg"></i>
+                      {% endif %}
+                      {% if listing.has_pet_friendly %}
+                      <i class="fa-solid fa-paw fa-lg"></i>
+                      {% endif %}
+                  </div>
+                  <div class="row text-secondary pb-2">
+                    <div class="col-6">
+                      <i class="fas fa-clock"></i> {{ listing.list_date | timesince }}</div>
+                  </div>
+                  <hr>
+                  <a href="{% url 'HotelListing' listing.id %}" class="btn btn-primary btn-block">More Info</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="col-md-12">
+            <p>No Listings Available</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </section>
+
+  
+
+
+  <section id="services" class="py-5 bg-secondary text-white" style="background-image: url('{% static "img/building.jpg"%}');">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-4">
+          <i class="fas fa-comment fa-4x mr-4"></i>
+          <hr>
+          <h3>Consulting Services</h3>
+          <p>Our expert consulting services offer tailored advice and strategic guidance, ensuring you make informed real estate decisions.</p>
+          <p>Get professional insights and personalized consultations from our team to navigate the complexities of the real estate market.</p>
+        </div>
+        <div class="col-md-4">
+          <i class="fas fa-home fa-4x mr-4"></i>
+          <hr>
+          <h3>Propery Management</h3>
+          <p>Trust us to handle every aspect of property management, from tenant relations to maintenance, providing peace of mind to property owners.</p>
+          <p>Our property management services ensure your investment is taken care of with efficiency and care, maximizing its potential.</p>
+        </div>
+        <div class="col-md-4">
+          <i class="fas fa-suitcase fa-4x mr-4"></i>
+          <hr>
+          <h3>Buying, Selling & Renting</h3>
+          <p>Explore a diverse portfolio of properties for buying, selling, or renting, backed by our expertise in real estate transactions.</p>
+          <p>From finding the perfect dream home to facilitating smooth selling or renting processes, we streamline your real estate journey.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    const hasCityCookie = document.cookie.replace(/(?:(?:^|.*;\s*)city\s*=\s*([^;]*).*$)|^.*$/, "$1");
+  
+    if (!hasCityCookie) {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(success, error);
+      } else {
+        console.log('Geolocation is not supported in this browser');
+      }
+    }
+  
+    function success(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const api_url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
+  
+      fetch(api_url)
+        .then(res => res.json())
+        .then(data => {
+          const city = data.city;
+          document.cookie = `city=${city}`; // Set city in a cookie
+          console.log(`City set to ${city}`);
+          location.reload(); // Reload the page after setting the 'city' cookie
+        });
+    }
+  
+    function error() {
+      console.log('Cannot get location');
+      // Perform other actions or display a message if unable to retrieve geolocation
+    }
+  </script>
+  
+  
+  {% endblock %}

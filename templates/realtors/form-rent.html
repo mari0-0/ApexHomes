@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>ApexHomes | sell house</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="author" content="colorlib.com">
+
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		<link rel="stylesheet" href="{% static 'form/fonts/material-design-iconic-font/css/material-design-iconic-font.css' %}">
+
+		<!-- DATE-PICKER -->
+		<link rel="stylesheet" href="{% static 'form/vendor/date-picker/css/datepicker.min.css' %}">
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="{% static 'form/css/style.css' %}">
+        <script src="https://kit.fontawesome.com/b481283466.js" crossorigin="anonymous"></script>
+        <style>
+            body{
+                background: url("{% static 'img/form-bg.jpg' %}") no-repeat center;
+            }
+            #_desc{
+                resize: vertical;
+                padding-left: 5px;
+                height: 200px;
+            }
+            @media(min-width: 767px){
+                .wizard{
+                    height: 700px;
+                }
+            }
+            .file-container {
+                position: relative;
+                display: inline-block;
+            }
+            
+            .file-label {
+                font-family: "Poppins-Regular";
+                display: inline-block;
+                background-color: #3377c0;
+                color: white !important;
+                padding: 8px 15px;
+                cursor: pointer !important;
+                letter-spacing: 1px;
+                height: 42px;
+                align-items: center;
+            }
+            
+            .file-label span {
+                display: inline-block;
+            }
+            
+            #fileInput {
+                display: none; /* Hide the actual input */
+            }
+
+            #profile-pic {
+                display: none;
+              }
+              
+              .custom-upload-button {
+                font-family: "Poppins-Regular";
+                display: inline-block;
+                padding: 8px 15px;
+                background-color: #3377c0;
+                color: #fff !important;
+                border: none;
+                letter-spacing: 1px;
+                height: 42px;
+                align-items: center;                cursor: pointer;
+              }
+              
+              .custom-upload-button:hover {
+                background-color: #2980b9;
+              }
+              .alert{
+                background-color: #f8d7da;
+                color: #58151c;
+                padding: 1rem;
+                border: 1px solid #f1aeb5;
+                border-radius: 0.375rem;
+                margin-bottom: 1rem;
+              }
+        </style>
+	</head>
+	<body>
+		<div class="wrapper">
+            <form action="" id="wizard" class="myForm" method="post" enctype="multipart/form-data" 
+            {% if messages %}
+                style="height: 780px;"
+            {% endif %}
+                >
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{message}}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                {% csrf_token %}
+        		<!-- SECTION 1 -->
+                <h4></h4>
+                <section>
+                    <h3>User profile</h3>
+                	<div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                First Name
+                            </label>
+                            <div class="form-holder">
+                                <i class="zmdi zmdi-account-o"></i>
+                                
+                                {% if user.is_authenticated %}
+                                    <input name="first_name" type="text" class="form-control" value="{{user.first_name}}" readonly>
+
+                                {% else %}
+                                    <input name="first_name" type="text" class="form-control">
+
+                                {% endif %}
+                                    
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Last Name
+                            </label>
+                            <div class="form-holder">
+                                <i class="zmdi zmdi-edit"></i>
+                                {% if user.is_authenticated %}
+                                    <input name="last_name" type="text" class="form-control" value="{{user.last_name}}" readonly>
+
+                                {% else %}
+                                    <input name="last_name" type="text" class="form-control">
+
+                                {% endif %}
+                            </div>
+                        </div>
+                	</div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                Email ID
+                            </label>
+                            <div class="form-holder">
+                                <i class="zmdi zmdi-email"></i>
+                                
+                                {% if user.is_authenticated %}
+                                    <input name="email" type="text" class="form-control" value="{{user.email}}" readonly>
+                                {% else %}
+                                    <input name="email" type="text" class="form-control"> 
+                                {% endif %}
+                                    
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Phone Number
+                            </label>
+                            <div class="form-holder">
+                                <i class="zmdi zmdi-smartphone-android"></i>
+                                <input name="ph_no" type="text" class="form-control" oninput="validateNumber(this)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                House Name/No.
+                            </label>
+                            <div class="form-holder">
+                                <i class="fa-solid fa-house"></i>
+                                <input name="house_no" type="text" class="form-control" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Profile Picture
+                            </label>
+                            <div class="form-holder">
+                                <div style="display: flex;">
+                                    <input type="file" id="profile-pic" name="profile_pic" accept="image/*" style="display: none;" onchange="updateLabelText(this)">
+                                    <label for="profile-pic" class="custom-upload-button">Select Profile Picture</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+				<!-- SECTION 2 -->
+                <h4></h4>
+                <section>
+                	<h3>Residential address</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                Street Address
+                            </label>
+                            <div class="form-holder">
+                                <i class="zmdi zmdi-pin"></i>
+                                <input name="address" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Town / City
+                            </label>
+                            <div class="form-holder">
+                                <i class="zmdi zmdi-pin-drop"></i>
+                                <input name="city" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                State
+                            </label>
+                            <div class="form-holder">
+                                <i class="zmdi zmdi-pin-drop"></i>
+                                <select name="state" id="" class="form-control">
+                                    {% for key,value in state_choices.items %}
+                                        <option value="{{ key }}" class="option">{{ value }}</option>
+                                    {% endfor %}
+                                </select>      
+                           </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Postcode / Zip
+                            </label>
+                            <div class="form-holder password">
+                                <i class="zmdi zmdi-eye"></i>
+                                <input name="postcode" type="password" class="form-control" autocomplete="off" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                Sqft.
+                            </label>
+                            <div class="form-holder">
+                                <i class="fa-solid fa-shoe-prints"></i>
+                                <input name="sqft" value="0" type="text" class="form-control" oninput="validateNumber(this)">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Price
+                            </label>
+                            <div class="form-holder">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                                <input name="price" value="0" type="text" class="form-control" oninput="validateNumber(this)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                 Number Of Bedrooms
+                            </label>
+                            <div class="form-holder">
+                                <i class="fa-solid fa-bed"></i>
+                                <select name="bedrooms" id="" class="form-control">
+                                    {% for key,value in bedroom_choices.items %}
+                                        <option value="{{ key }}" class="option">{{ value }}</option>
+                                    {% endfor %}
+                                </select>                            
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Number Of Bathrooms
+                            </label>
+                            <div class="form-holder">
+                                <i class="fa-solid fa-bath"></i>
+                                <select name="bathrooms" id="" class="form-control">
+                                    {% for key,value in bedroom_choices.items %}
+                                        <option value="{{ key }}" class="option">{{ value }}</option>
+                                    {% endfor %}
+                                </select>                                  
+                            </div>
+                        </div>
+                    </div>
+                    
+                </section>
+
+                <!-- SECTION 3 -->
+                <h4></h4>
+                <section>
+                    <!-- <h3 style="margin-bottom: 37px;">What are you doing?</h3>
+                    <div class="grid">
+                        <div class="grid-item active">
+                            <div class="thumb">
+                                <img src="{% static 'form/images/programming.jpg' %}" alt="">
+                            </div>
+                            <div class="heading">
+                                Programming
+                            </div>
+                        </div>
+                        <div class="grid-item">
+                            <div class="thumb">
+                                <img src="{% static 'form/images/sports.jpg' %}" alt="">
+                            </div>
+                            <div class="heading">
+                                Sports
+                            </div>
+                        </div>
+                        <div class="grid-item">
+                            <div class="thumb">
+                                <img src="{% static 'form/images/business.jpg' %}" alt="">
+                            </div>
+                            <div class="heading">
+                                Business
+                            </div>
+                        </div>
+                        <div class="grid-item">
+                            <div class="thumb">
+                                <img src="{% static 'form/images/tour-guide.jpg' %}" alt="">
+                            </div>
+                            <div class="heading">
+                                Tour Guide
+                            </div>
+                        </div>
+                        <div class="grid-item">
+                            <div class="thumb">
+                                <img src="{% static 'form/images/art-design.jpg' %}" alt="">
+                            </div>
+                            <div class="heading">
+                                Art-Design
+                            </div>
+                        </div>
+                        <div class="grid-item">
+                            <div class="thumb">
+                                <img src="{% static 'form/images/doctor.jpg' %}" alt="">
+                            </div>
+                            <div class="heading">
+                                Doctor
+                            </div>
+                        </div>
+                    </div> -->
+                    <h3>Details</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="">
+                                Number Of Garages
+                            </label>
+                            <div class="form-holder">
+                                <i class="fa-solid fa-warehouse"></i>
+                                <select  name="garages" id="" class="form-control">
+                                    {% for key,value in bedroom_choices.items %}
+                                        <option value="{{ key }}" class="option">{{ value }}</option>
+                                    {% endfor %}
+                                </select>      
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <label for="">
+                                Upload Images
+                            </label>
+                            <div class="form-holder">
+                                <div class="file-container">
+                                    <label for="fileInput" class="file-label">
+                                        <span>Choose files</span>
+                                    </label>
+                                    <input name="imgs" type="file" id="fileInput" class="img-up" accept="image/*" multiple onchange="checkFiles(this)" />
+                                    <span id="fileCount">No files selected</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-col">
+                            <label for="">
+                                Description
+                            </label>
+                            <div class="form-holder">
+                                <textarea name="description" id="_desc" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </form>
+		</div>
+        
+		<script src="{% static 'form/js/jquery-3.3.1.min.js' %}"></script>
+		
+		<!-- JQUERY STEP -->
+		<script src="{% static 'form/js/jquery.steps.js' %}"></script>
+
+		<!-- DATE-PICKER -->
+		<script src="{% static 'form/vendor/date-picker/js/datepicker.js' %}"></script>
+		<script src="{% static 'form/vendor/date-picker/js/datepicker.en.js' %}"></script>
+
+		<script src="{% static 'form/js/main.js' %}"></script>
+        <script>
+            function checkFiles(input) {
+                const files = input.files;
+                const fileCountElement = document.getElementById('fileCount');
+                
+                if (files.length > 7) {
+                    alert("You can only upload a maximum of 7 files.");
+                    input.value = ''; // Clear the file input to prevent uploading more than the limit
+                } else {
+                    if (files.length > 0) {
+                        fileCountElement.textContent = files.length + (files.length === 1 ? ' file selected' : ' files selected');
+                    } else {
+                        fileCountElement.textContent = 'No files selected';
+                    }
+                }
+            }
+            function validateNumber(inputField) {
+                let inputValue = inputField.value;
+                if (isNaN(inputValue)) {
+                    alert('Please enter only numeric values');
+                    inputField.value = inputValue.slice(0, -1); // Remove the non-numeric character
+                }
+            }
+            function updateLabelText(input) {
+                const fileName = input.value.split('\\').pop(); // Get the file name without the full path
+                document.querySelector('.custom-upload-button').textContent = fileName; // Update the label content with the file name
+              }
+              
+              
+        </script>
+<!-- Template created and distributed by Colorlib -->
+</body>
+</html>

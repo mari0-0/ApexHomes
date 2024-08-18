@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.css' %}">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" id="GFG">
+  <!-- Lightbox -->
+  <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/b481283466.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;700&display=swap" rel="stylesheet">
+
+  {% block style %}
+    
+  {% endblock style %}
+    
+  <title>Apex Homes {% block title %}{% endblock %}</title>
+</head>
+
+<body>
+  <!-- Top Bar -->
+  {% include 'partials/_topbar.html' %}
+  <!-- NavBar -->
+  {% include 'partials/_navbar.html' %}
+    <!-- Main Content -->
+  {% block content %} {% endblock %}
+  <!-- Footer -->
+  {% include 'partials/_footer.html' %}
+  
+
+  <script src="{% static 'js/jquery-3.3.1.min.js' %} "></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %} "></script>
+  <script src="{% static 'js/lightbox.min.js' %} "></script>
+  <script src="{% static 'js/main.js' %} "></script>
+  <script>
+    function convertToIndianSystem(number) {
+      if (number >= 10000000) {
+        return (number / 10000000).toFixed(2) + ' Cr';
+      } else if (number >= 100000) {
+        let result = (number / 100000).toFixed(1) + ' Lac';
+        if (Number.isInteger(number / 100000)) {
+          result = (number / 100000).toFixed(0) + ' Lac';
+        }
+        return result;
+      } else if (number >= 1000) {
+        let result = (number / 1000).toFixed(1) + ' K';
+        if (Number.isInteger(number / 1000)) {
+          result = (number / 1000).toFixed(0) + ' K';
+        }
+        return result;
+      }
+      return number.toString();
+    }
+    // Function to set the cookie
+    function setCookie(name, value) {
+      document.cookie = `${name}=${value}`;
+    }
+
+    // Function to get the query parameter from the URL
+    function getQueryParam(param) {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      return urlParams.get(param);
+    }
+    path = window.location.pathname + window.location.search
+    // Check if '/' is accessed and set the cookie isHomes to true
+    if (path === '/') {
+      setCookie('isHomes', 'true');
+    } else if (path === '/?hotels=1') {
+      setCookie('isHomes', 'false');
+    }
+    function getCookie(cookieName) {
+      const name = cookieName + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookieArray = decodedCookie.split(';');
+  
+      for (let i = 0; i < cookieArray.length; i++) {
+          let cookie = cookieArray[i];
+          while (cookie.charAt(0) === ' ') {
+              cookie = cookie.substring(1);
+          }
+          if (cookie.indexOf(name) === 0) {
+              return cookie.substring(name.length, cookie.length);
+          }
+      }
+      return "";
+  }
+  const isHomesValue = getCookie('isHomes');
+    console.log(isHomesValue)
+  // Get all elements with the ID '_price'
+  const priceElements = document.querySelectorAll('#_price');
+
+  // Iterate through each element and apply the conversion
+  priceElements.forEach(priceElement => {
+    const priceValue = parseFloat(priceElement.textContent);
+    const convertedValue = convertToIndianSystem(priceValue);
+    priceElement.textContent = convertedValue;
+  });
+</script>
+</body>
+
+</html>

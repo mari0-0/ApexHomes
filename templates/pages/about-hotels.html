@@ -1,0 +1,84 @@
+{% extends 'base-hotels.html' %} 
+
+{% load static %}
+
+{% block title %} | About Us {% endblock %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">About Apex Homes</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'index' %}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> About</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section id="about" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h2>About Apex Homes</h2>
+          <p class="lead">We Search For The Perfect Hotel</p>
+          <img src="{% static 'img/about.jpg' %}" alt="">
+          <p class="mt-4">
+Welcome to Apex Homes, your premier destination for a revolutionary hotel experience. At Apex Homes, we're not just changing the way you book hotels; we're redefining the very idea of hospitality. Whether you're a traveler in search of the perfect stay or a hotelier looking to showcase your property, Apex Homes is here to make every journey exceptional.
+<br>
+<h2>Our Mission</h2>
+At Apex Homes, our mission is to connect travelers with the perfect accommodations and empower hotel owners to showcase their unique offerings. We believe in making travel not just a destination but an unforgettable experience. Through innovative technology and personalized service, we're making hospitality a seamless and delightful affair.
+<br><br>
+<h2>Why Choose Apex Homes?</h2>
+<br>
+<h4>Diverse Selection</h4>
+
+Discover a world of possibilities with Apex Homes. We curate a diverse selection of hotels, from boutique gems to luxurious resorts, ensuring that every traveler finds the perfect match for their preferences and budget.
+<br><br>
+<h4>Empowering Hotel Owners</h4>
+
+Are you a hotel owner looking to boost your bookings and showcase your property to a global audience? Apex Homes provides a platform where you can list your hotel effortlessly, connect with travelers, and elevate your business to new heights.
+<br><br>
+<h4>Seamless Booking Experience</h4>
+
+We understand the importance of a smooth booking process. Apex Homes leverages user-friendly technology to provide a seamless booking experience. Browse, book, and enjoy your stay – it's that simple.
+<br><br>
+<h4>Community-Driven Approach</h4>
+
+At Apex Homes, we believe in the power of community. Our platform fosters connections between travelers and hotel owners, creating a vibrant community that values hospitality, diversity, and unique travel experiences.
+<br><br>
+<h4>Our Promise</h4>
+
+When you choose Apex Homes, you're not just booking a hotel; you're unlocking a world of possibilities. For hotel owners, we promise to be your partner in success, helping you reach a global audience and maximize your business potential.
+
+Thank you for considering Apex Homes for your travel needs or hotel listing. We look forward to being a part of your journey and making every stay remarkable.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="bg-dark text-white text-center">
+    <h2 class="display-4">We Work For You</h2>
+    <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem velit aperiam, unde aliquid at similique!</h4>
+    <hr>
+    <a href="{% url 'listings' %}" class="btn btn-secondary text-white btn-lg">View Our Featured Listings</a>
+  </section>
+
+{% endblock %}
