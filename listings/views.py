@@ -196,9 +196,11 @@ def payment(request):
         listing_id = request.POST['listing_id']
         hotel = HotelRoom.objects.get(id=listing_id)
         amount = request.POST['amount']
-        check_in = datetime.strptime(request.POST['check_in'].replace('midnight', '12:00 AM'), '%b. %d, %Y, %I:%M %p')
-        check_out = datetime.strptime(request.POST['check_out'].replace('midnight', '12:00 AM'), '%b. %d, %Y, %I:%M %p')
-
+        check_in_str = request.POST['check_in'].replace('midnight', '12:00 AM').replace('Sept.', 'Sep.')
+        check_out_str = request.POST['check_out'].replace('midnight', '12:00 AM').replace('Sept.', 'Sep.')
+        
+        check_in = datetime.strptime(check_in_str, '%b. %d, %Y, %I:%M %p')
+        check_out = datetime.strptime(check_out_str, '%b. %d, %Y, %I:%M %p')
         
         rented = RentedHotel.objects.create(user=user, hotel=hotel, check_in=check_in, check_out=check_out, amount=amount)
         rented.save()

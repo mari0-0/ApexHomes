@@ -71,7 +71,6 @@ class Listing(models.Model):
   def __str__(self):
     return self.title
   
-
 class HotelRoom(models.Model): 
     BED_TYPES = [
         ('king', 'King'),
@@ -184,7 +183,6 @@ class HotelRoom(models.Model):
 
         # Call the actual save method to save the instance
         super(HotelRoom, self).save(*args, **kwargs)
-
 
 class RentedHotel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

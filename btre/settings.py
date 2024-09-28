@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_extensions',
+    'djangoviz'
 ]
 
 MIDDLEWARE = [
@@ -147,3 +149,8 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+GRAPH_MODELS ={
+'all_applications': True,
+'graph_models': True,
+}

@@ -36,6 +36,21 @@
       background-color: ghostwhite ;
     }
     
+    #showcase{
+      position: relative;
+    }
+
+    #overlay {
+      position: absolute; /* Sit on top of the page content */
+      width: 100%; /* Full width (cover the whole page) */
+      height: 100%; /* Full height (cover the whole page) */
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.3); /* Black background with opacity */
+      cursor: pointer; /* Add a pointer on hover */
+    }
   </style>
 {% endblock style %}
   
@@ -47,7 +62,9 @@
 {% block content %}
 <!-- Showcase -->
 <section id="showcase" style="background-image: url({% static 'img/building.jpg'%});">
-    <div class="container  text-center">
+  <div id="overlay"></div>
+
+    <div class="container text-center" style="position: relative; z-index: 2;">
       <div class="home-search  p-5" >
         <div class="overlay box-main p-5" style="border-radius: 10px;">
         
@@ -117,7 +134,7 @@
                   </select>
                 </div>
               </div>
-              <button class="btn btn-primary btn-block mt-4" type="submit">Submit form</button>
+              <button class="btn btn-primary btn-block mt-4" type="submit">Search Homes</button>
             </form>
           </div>
         </div>
@@ -262,21 +279,18 @@
           <hr>
           <h3>Consulting Services</h3>
           <p>Our expert consulting services offer tailored advice and strategic guidance, ensuring you make informed real estate decisions.</p>
-          <p>Get professional insights and personalized consultations from our team to navigate the complexities of the real estate market.</p>
         </div>
         <div class="col-md-4">
           <i class="fas fa-home fa-4x mr-4"></i>
           <hr>
           <h3>Propery Management</h3>
           <p>Trust us to handle every aspect of property management, from tenant relations to maintenance, providing peace of mind to property owners.</p>
-          <p>Our property management services ensure your investment is taken care of with efficiency and care, maximizing its potential.</p>
         </div>
         <div class="col-md-4">
           <i class="fas fa-suitcase fa-4x mr-4"></i>
           <hr>
           <h3>Buying, Selling & Renting</h3>
           <p>Explore a diverse portfolio of properties for buying, selling, or renting, backed by our expertise in real estate transactions.</p>
-          <p>From finding the perfect dream home to facilitating smooth selling or renting processes, we streamline your real estate journey.</p>
         </div>
       </div>
     </div>

@@ -144,6 +144,7 @@ def rentForm(request):
             pet = request.POST.get('pet', False)
             imgs = request.FILES.getlist('imgs')
             description = request.POST['description']
+            embedLink = request.POST['map']
 
             Hotel = HotelRoom.objects.create(
                 realtor=realtor,
@@ -167,8 +168,10 @@ def rentForm(request):
                 has_restaurant=restaurant,
                 has_parking=parking,
                 has_tv=tv,
-                has_pet_friendly=pet
+                has_pet_friendly=pet,
+                embed_lnk=embedLink
             )
+            
             for i, img in enumerate(imgs):
                 if i == 0:
                     # First image goes to photo_main
